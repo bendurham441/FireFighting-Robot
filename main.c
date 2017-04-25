@@ -13,9 +13,9 @@ const speed = 63; // The default speed to be used throughout the program
 
 void forward(int speed, int time){
 	// A simple function to simplify the act of moving forward
-	motor[right_motor] = speed; 
+	motor[right_motor] = speed; 				// Set the motor powers
 	motor[left_motor] = speed;
-	if(time != 0) {
+	if(time != 0) {						// Only use a wait time if the time is specified
 		wait1Msec(time);
 	}
 	
@@ -23,29 +23,29 @@ void forward(int speed, int time){
 
 void back(int speed, int time){
 	// A function to make going backward more simple
-	motor[right_motor] = speed * -1;
+	motor[right_motor] = speed * -1;			// Set the negative of the inputted speed
 	Motor[left_motor] = speed * -1;
-	if(time != 0) {
+	if(time != 0) {						// Only use a wait time if the time is specified
 		wait1Msec(time);
 	}
 }
 
 void stop(){
 	// A function to stop both motors
-	motor[right_motor] = 0;
+	motor[right_motor] = 0;					// Set the motor powers
 	motor[left_motor] = 0;
 }
 
 void turn_right() {
 	// A function to turn the robot to the right
-	motor[right_motor] = -63;
+	motor[right_motor] = -63;				// Set the motor powers
 	motor[left_motor] = 63;
 	wait1Msec(750);
 }
 
 void turn_left() {
 	// A function to turn the robot to the left using a point turn
-	motor[right_motor] = 63;
+	motor[right_motor] = 63;				// Set the motor powers
 	motor[left_motor] = -63;
 	wait1Msec(750);
 }
@@ -56,21 +56,21 @@ void extinguish() {
 	 */
 	forward(63, 200);
 	stop();
-	wait1Msec(3000); // Wait 3 seconds to hopefully extinguish the fire
-	back(63, 200);	 // Move back to the original position
+	wait1Msec(3000); 					// Wait 3 seconds to hopefully extinguish the fire
+	back(63, 200);	 					// Move back to the original position
 }
 
 void rotate_arm() {
 	// A function to rotate the arm to put the second balloon into place, if necessary
-	while(SensorValue[encoder] != 45) { 	// Wait for the servo to turn 45 degrees
-		motor[servo] = 63;		// Have the servo spinning while checking the encoder
+	while(SensorValue[encoder] != 45) { 			// Wait for the servo to turn 45 degrees
+		motor[servo] = 63;				// Have the servo spinning while checking the encoder
 	}
-	motor[servo] = 0;			// Stop the servo
+	motor[servo] = 0;					// Stop the servo
 }
 
 void rotate() {
 	// A function to rotate the robot a small amount in order to scan the room
-	motor[right_motor] = 63;	//set the motor powers to the default speed;
+	motor[right_motor] = 63;				//set the motor powers to the default speed;
 	motor[left_motor] = -63;
 	wait1Msec(100);
 }
@@ -101,21 +101,11 @@ task main()
 		forward(63, 0);					// Keep moving forward
 	}
 	turn_right();						// Turn right when it has reached a room
-	while(SensorValue[back_line] >= 100) { 			// while sensor sees black
-		forward(63), 0;
-		while(SensorValue[right_sonar] <= 15) {
-			forward(63);
-		}
-		turn_right();
-		forward(63);
-		while(SensorValue[back_line] <= 100) {
-			forward();
-			if(SensorValue[back_line] >= 100) {
-				stop();
-				room_scan();
-			}
-		}
+	while(SensorValue[right_sonar] <= 15) {
+		forward(63, 0);
 	}
+	turn_right();
+	room_scan;
 	forward(63);
 	wait1Msec(1000);
 	turn_left();
