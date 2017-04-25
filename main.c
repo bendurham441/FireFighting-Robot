@@ -11,16 +11,23 @@
 
 const speed = 63; // The default speed to be used throughout the program
 
-void forward(int speed){
+void forward(int speed, int time){
 	// A simple function to simplify the act of moving forward
 	motor[right_motor] = speed; 
 	motor[left_motor] = speed;
+	if(time != 0) {
+		wait1Msec(time);
+	}
+	
 }
 
-void back(int speed){
+void back(int speed, int time){
 	// A function to make going backward more simple
 	motor[right_motor] = speed * -1;
 	Motor[left_motor] = speed * -1;
+	if(time != 0) {
+		wait1Msec(time);
+	}
 }
 
 void stop(){
@@ -47,12 +54,10 @@ void extinguish() {
 	/** A function that moves the robot forward with the intent of placing the balloon over top
 	 *  of the candle
 	 */
-	forward(63);
-	wait1Msec(200);
+	forward(63, 200);
 	stop();
 	wait1Msec(3000); // Wait 3 seconds to hopefully extinguish the fire
-	back(63);	 // Move back to the original position
-	wait1Msec(200);
+	back(63, 200);	 // Move back to the original position
 }
 
 void rotate_arm() {
@@ -72,37 +77,32 @@ void rotate() {
 
 
 void room_scan() {
-	forward(63);
-	wait1Msec(1000);
-	while(fire == false) {
-		int counter = 0;
-		if(SensorValue[light] >= 20 && counter < 29) {
-			rotate();
-			counter += 1;
-		} else {
-			extinguish();
-			if(SensorValue[light] <= 20) {
-				rotate_arm();
-				extinguish();
-			} else {
-				return;
-			}
-		}
+	// A function to rotate around the room in small increments and check to see if there is a fire
+	forward(63, 1000);
+	int counter = 0;
+	while(SensorValue[light] >= 20 && counter < 29) {	// If there is a fire and the robot has not completely turned
+		rotate();					// Rotate the robot in small increments and add to the counter
+		counter += 1;
+	}
+	extinguish();						// Once the light is enough to meet the criteria, extinguish it
+	wait1Msec(1000);					// Wait for a second to see if the fire is still burning
+	if(SensorValue[light] <= 20) {				// If the fire is still burning
+		rotate_arm();					// Rotate the arm, to put the next balloon into place
+		extinguish();					// Second attempt to extinguish the fire
 	}
 }
 
 task main()
 {
-	wait1Msec(1000);
-	bMotorReflected[right_motor] = true;
-	forward(63);
-	while(SensorValue[right_sonar] <= 15) {
-		forward(63);
+	wait1Msec(1000);					// Initial wait time
+	bMotorReflected[right_motor] = true;			// Make it so the mirroring of the motors does not have to be accounted for
+	forward(63, 0);						// Start the motors
+	while(SensorValue[right_sonar] <= 15) {			// While the robot is less than 15 cms from a wall
+		forward(63, 0);					// Keep moving forward
 	}
-	turn_right();
-	while(SensorValue[back_line] >= 100) { // while sensor sees black
-		forward(63);
-		// untilSonarGreaterThan(15, right_sonar);
+	turn_right();						// Turn right when it has reached a room
+	while(SensorValue[back_line] >= 100) { 			// while sensor sees black
+		forward(63), 0;
 		while(SensorValue[right_sonar] <= 15) {
 			forward(63);
 		}
