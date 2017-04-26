@@ -106,11 +106,10 @@ task main()
 	}
 	turn_right();
 	room_scan;
-	forward(63);
-	wait1Msec(1000);
+	forward(63, 1000);
 	turn_left();
 	while(SensorValue[left_sonar] <= 15) {
-		forward(63);
+		forward(63, 0);
 	}
 	turn_right();
 	while(SensorValue[right_sonar] <=15) {
@@ -118,35 +117,32 @@ task main()
 	}
 	turn_right();
 	room_scan();
-	forward(63);
-	wait1Msec(1000);
+	forward(63, 1000);
 	turn_left();
 	while(SensorValue[right_sonar] <= 15) {
 		forward(63);	
 	}
 	turn_right();
 	room_scan();
-	forward(63);
-	wait1Msec(1000);
+	forward(63, 1000);
 	turn_right();
 	while(SensorValue[right_sonar] <= 15) {
-		forward(63);
+		forward(63, 0);
 	}
 	turn_right();
 	while(SensorValue[left_sonar] <= 15) {
-		forward(63);
+		forward(63, 0);
 	}
 	turn_left();
 	room_scan();
-	forward(63);
-	wait1Msec(1000);
+	forward(63, 1000);
 	turn_right();
 	while(SensorValue[right_sonar] <= 15){
-		forward(63);
+		forward(63, 0);
 	}
 	turn_right();
 	while(SensorValue[right_sonar] <= 15) {
-		forward(63);
+		forward(63, 0);
 	}
 	stop();
 }
