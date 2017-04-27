@@ -83,8 +83,12 @@ void room_scan() {
 	// A function to rotate around the room in small increments and check to see if there is a fire
 	forward(63, 2000);
 	int counter = 0;
+	bool fire = false;
 	
-	while(SensorValue[light] >= 20 && counter < 45) {	// If there is a fire and the robot has not completely turned
+	while(counter < 45) {	// If there is a fire and the robot has not completely turned
+		if(SensorValue[light] <= 800) {
+			fire = true;
+		}
 		rotate();					// Rotate the robot in small increments and add to the counter
 		counter += 1;
 	}
