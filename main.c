@@ -11,10 +11,10 @@
 
 const int speed = 63; // The default speed to be used throughout the program
 
-void forward(int speed, int time){
+void forward(int speed_param, int time){
 	// A simple function to simplify the act of moving forward
-	motor[right_motor] = speed; 				// Set the motor powers
-	motor[left_motor] = speed;
+	motor[right_motor] = speed_param; 			// Set the motor powers
+	motor[left_motor] = speed_param;
 	
 	if(time != 0) {						// Only use a wait time if the time is specified
 		wait1Msec(time);
